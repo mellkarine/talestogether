@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">talestogether</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_friendship">Friendship</string>
+    <string name="title_activity_components">Components</string>
+    <string name="title_activity_match">Match</string>
+    <string name="title_activity_owner_profile">OwnerProfile</string>
+    <string name="title_activity_post_entity">PostEntity</string>
+    <string name="title_activity_post_dao">PostDAO</string>
+    <string name="title_activity_pet_entity">PetEntity</string>
+    <string name="title_activity_pet_dao">PetDAO</string>
+    <string name="title_activity_post_database">PostDatabase</string>
+    <string name="title_activity_app_database.kt">AppDatabase.kt</string>
+</resources>
