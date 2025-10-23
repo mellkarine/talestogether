@@ -42,7 +42,7 @@
             android:label="@string/title_activity_post_entity"
             android:theme="@style/Theme.Talestogether" />
         <activity
-            android:name=".OwnerProfile"
+            android:name=".ui.screens.OwnerProfile"
             android:exported="false"
             android:label="@string/title_activity_owner_profile"
             android:theme="@style/Theme.Talestogether" />
@@ -67,7 +67,7 @@
             android:label="@string/title_activity_friendship"
             android:theme="@style/Theme.Talestogether" />
         <activity
-            android:name=".Profile"
+            android:name=".ui.screens.Profile"
             android:exported="false"
             android:label="@string/title_activity_profile"
             android:theme="@style/Theme.Talestogether" />

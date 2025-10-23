@@ -1,9 +1,10 @@
-package com.example.talestogether
+package com.example.talestogether.ui.screens
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,41 +22,41 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.talestogether.database.AppDatabase
-import com.example.talestogether.database.PostDao
 import com.example.talestogether.database.PostEntity
+import com.example.talestogether.repository.PostRepository
 import com.example.talestogether.ui.theme.PastelColorScheme
-import kotlinx.coroutines.launch
+import com.example.talestogether.viewmodel.PostViewModel
+import com.example.talestogether.viewmodel.PostViewModelFactory
 
 class OwnerProfile : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Inicializa banco, repositório e ViewModel
         val db = AppDatabase.getDatabase(this)
-        val postDao = db.postDao()
+        val repository = PostRepository(db.postDao())
+        val factory = PostViewModelFactory(repository)
+        val viewModel: PostViewModel by viewModels { factory }
 
         setContent {
-            OwnerProfileScreen(postDao)
+            OwnerProfileScreen(viewModel)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OwnerProfileScreen(postDao: PostDao) {
+fun OwnerProfileScreen(viewModel: PostViewModel) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
+    val posts by viewModel.posts.collectAsState()
 
-    var posts by remember { mutableStateOf(listOf<PostEntity>()) }
     var newPostText by remember { mutableStateOf("") }
     var editingPostId by remember { mutableStateOf<Int?>(null) }
     var editingText by remember { mutableStateOf("") }
-
-    // Carrega posts ao iniciar
-    LaunchedEffect(Unit) {
-        posts = postDao.getAllPosts()
-    }
 
     Scaffold(
         topBar = {
@@ -66,8 +67,14 @@ fun OwnerProfileScreen(postDao: PostDao) {
         },
         bottomBar = {
             BottomAppBar(containerColor = PastelColorScheme.primary) {
-                IconButton(onClick = { Toast.makeText(context, "Home clicado", Toast.LENGTH_SHORT).show() }) {
-                    Icon(Icons.Default.Home, contentDescription = "Home", tint = PastelColorScheme.onPrimary)
+                IconButton(onClick = {
+                    Toast.makeText(context, "Home clicado", Toast.LENGTH_SHORT).show()
+                }) {
+                    Icon(
+                        Icons.Default.Home,
+                        contentDescription = "Home",
+                        tint = PastelColorScheme.onPrimary
+                    )
                 }
             }
         }
@@ -86,7 +93,10 @@ fun OwnerProfileScreen(postDao: PostDao) {
                         .height(180.dp)
                         .background(
                             Brush.verticalGradient(
-                                colors = listOf(PastelColorScheme.primary, PastelColorScheme.secondary)
+                                colors = listOf(
+                                    PastelColorScheme.primary,
+                                    PastelColorScheme.secondary
+                                )
                             )
                         )
                 ) {
@@ -103,8 +113,16 @@ fun OwnerProfileScreen(postDao: PostDao) {
                 Spacer(modifier = Modifier.height(60.dp))
 
                 // Nome e bio
-                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-                    Text("Mell Karine", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = PastelColorScheme.onBackground)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        "Mell Karine",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = PastelColorScheme.onBackground
+                    )
                     Text("@mellkarine", fontSize = 16.sp, color = Color.Gray)
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
@@ -112,12 +130,12 @@ fun OwnerProfileScreen(postDao: PostDao) {
                         fontSize = 14.sp,
                         color = PastelColorScheme.onBackground,
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                 }
 
-                // Input de novo post ou edição
+                // Campo de novo post / edição
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -135,21 +153,16 @@ fun OwnerProfileScreen(postDao: PostDao) {
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(onClick = {
-                        scope.launch {
-                            if (editingPostId != null) {
-                                // Atualiza post existente
-                                val postToEdit = posts.find { it.id == editingPostId } ?: return@launch
-                                postDao.update(postToEdit.copy(text = editingText))
-                                posts = postDao.getAllPosts()
-                                editingPostId = null
-                                editingText = ""
-                                Toast.makeText(context, "Post editado!", Toast.LENGTH_SHORT).show()
-                            } else if (newPostText.isNotBlank()) {
-                                postDao.insert(PostEntity(text = newPostText))
-                                posts = postDao.getAllPosts()
-                                newPostText = ""
-                                Toast.makeText(context, "Post publicado!", Toast.LENGTH_SHORT).show()
-                            }
+                        if (editingPostId != null) {
+                            val postToEdit = posts.find { it.id == editingPostId } ?: return@Button
+                            viewModel.atualizarPost(postToEdit, editingText)
+                            editingPostId = null
+                            editingText = ""
+                            Toast.makeText(context, "Post editado!", Toast.LENGTH_SHORT).show()
+                        } else if (newPostText.isNotBlank()) {
+                            viewModel.adicionarPost(newPostText)
+                            newPostText = ""
+                            Toast.makeText(context, "Post publicado!", Toast.LENGTH_SHORT).show()
                         }
                     }) {
                         Text(if (editingPostId != null) "Salvar" else "Postar")
@@ -159,7 +172,7 @@ fun OwnerProfileScreen(postDao: PostDao) {
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            // Feed de posts
+            // Lista de posts
             items(posts) { post ->
                 Card(
                     modifier = Modifier
@@ -181,32 +194,20 @@ fun OwnerProfileScreen(postDao: PostDao) {
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             InteractionButton(label = "❤️ ${post.likes}") {
-                                scope.launch {
-                                    postDao.update(post.copy(likes = post.likes + 1))
-                                    posts = postDao.getAllPosts()
-                                }
+                                viewModel.curtirPost(post)
                             }
                             InteractionButton(label = "💬 ${post.comments}") {
-                                scope.launch {
-                                    postDao.update(post.copy(comments = post.comments + 1))
-                                    posts = postDao.getAllPosts()
-                                }
+                                viewModel.comentarPost(post)
                             }
                             InteractionButton(label = "🔁 ${post.reposts}") {
-                                scope.launch {
-                                    postDao.update(post.copy(reposts = post.reposts + 1))
-                                    posts = postDao.getAllPosts()
-                                }
+                                viewModel.repostar(post)
                             }
                             InteractionButton(label = "✏️") {
                                 editingPostId = post.id
                                 editingText = post.text
                             }
                             InteractionButton(label = "🗑️") {
-                                scope.launch {
-                                    postDao.delete(post)
-                                    posts = postDao.getAllPosts()
-                                }
+                                viewModel.deletarPost(post)
                             }
                         }
                     }

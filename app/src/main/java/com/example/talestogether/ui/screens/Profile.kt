@@ -1,11 +1,11 @@
-package com.example.talestogether
+package com.example.talestogether.ui.screens
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.clickable
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.talestogether.MainActivity
 import com.example.talestogether.ui.theme.PastelColorScheme
 import com.example.talestogether.ui.theme.TalestogetherTheme
 
@@ -176,7 +178,7 @@ fun ProfileScreen() {
                             ) {
                                 Icon(Icons.Default.Favorite, contentDescription = "Curtir", tint = PastelColorScheme.onPrimary)
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("${postText.length}", color = PastelColorScheme.onPrimary) // exemplo contador
+                                Text("${postText.length}", color = PastelColorScheme.onPrimary)
                             }
 
                             Spacer(modifier = Modifier.width(8.dp))
@@ -200,7 +202,7 @@ fun ProfileScreen() {
                             ) {
                                 Icon(Icons.Default.Share, contentDescription = "Repostar", tint = PastelColorScheme.onPrimary)
                                 Spacer(modifier = Modifier.width(4.dp))
-                                Text("0", color = PastelColorScheme.onPrimary) // exemplo contador
+                                Text("0", color = PastelColorScheme.onPrimary)
                             }
                         }
                     }
