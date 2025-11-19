@@ -37,7 +37,7 @@
             android:label="@string/title_activity_post_dao"
             android:theme="@style/Theme.Talestogether" />
         <activity
-            android:name=".database.PostEntity"
+            android:name=".data.local.entity.PostEntity"
             android:exported="false"
             android:label="@string/title_activity_post_entity"
             android:theme="@style/Theme.Talestogether" />

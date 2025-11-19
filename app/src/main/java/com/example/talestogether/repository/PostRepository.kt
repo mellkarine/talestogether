@@ -1,7 +1,7 @@
 package com.example.talestogether.repository
 
-import com.example.talestogether.database.PostDao
-import com.example.talestogether.database.PostEntity
+import com.example.talestogether.data.local.dao.PostDao
+import com.example.talestogether.data.local.entity.PostEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

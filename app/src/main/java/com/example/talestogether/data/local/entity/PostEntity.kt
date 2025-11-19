@@ -1,4 +1,4 @@
-package com.example.talestogether.database
+package com.example.talestogether.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

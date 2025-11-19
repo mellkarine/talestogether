@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "793322801064",
+    "project_id": "talestogether-cb2fb",
+    "storage_bucket": "talestogether-cb2fb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:793322801064:android:169e01f0021a204ecc7f9d",
+        "android_client_info": {
+          "package_name": "com.example.talestogether"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyLo-cwCifsCTEGMTk91O6yxqVScKeyDo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

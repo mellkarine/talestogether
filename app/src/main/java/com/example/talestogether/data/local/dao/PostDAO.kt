@@ -1,6 +1,7 @@
-package com.example.talestogether.database
+package com.example.talestogether.data.local.dao
 
 import androidx.room.*
+import com.example.talestogether.data.local.entity.PostEntity
 
 @Dao
 interface PostDao {

@@ -25,8 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.talestogether.database.AppDatabase
-import com.example.talestogether.database.PostEntity
+import com.example.talestogether.data.local.database.AppDatabase
 import com.example.talestogether.repository.PostRepository
 import com.example.talestogether.ui.theme.PastelColorScheme
 import com.example.talestogether.viewmodel.PostViewModel

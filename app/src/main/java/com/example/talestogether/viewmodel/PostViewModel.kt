@@ -2,7 +2,7 @@ package com.example.talestogether.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.talestogether.database.PostEntity
+import com.example.talestogether.data.local.entity.PostEntity
 import com.example.talestogether.repository.PostRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
